@@ -8,16 +8,16 @@ using namespace std;
 #define MAX_HEIGHT 16
 #define MAX_WIDTH 41
 
-class board
-{
+
+class board;
+class blocks;
+class point;
+
+class board :public blocks {
 private:
-
-public:
-    board(string shape, int start_col, int move) {
-
-    }
     int cur_board[MAX_HEIGHT][MAX_WIDTH];
-    void initboard(int row, int column) {
+public:
+    board(int row, int column) {
         for (int i = 0; i < MAX_HEIGHT; i++)
             for (int j = 0; j < MAX_WIDTH; j++) {
                 if (i > 0 && i <= row && j > 0 && j <= column)
@@ -25,19 +25,121 @@ public:
                 else cur_board[i][j] = -1;		//-1 = wall
             }
     }
+    void upboard(string shape, int start_col, int move) {
+        getblocks(shape);
+    }
+
+
     blocks*
 };
 
 class blocks {
 private:
-    char[]
+    int t1[4][4] = {
+        {0,0,0,0},
+        {0,0,0,0},
+        {1,1,1,0},
+        {0,1,0,0}
+    }, t2[4][4] = {
+        {0,0,0,0},
+        {0,1,0,0},
+        {1,1,0,0},
+        {0,1,0,0}
+    }, t3[4][4] = {
+        {0,0,0,0},
+        {0,0,0,0},
+        {0,1,0,0},
+        {1,1,1,0}
+    }, t4[4][4] = {
+        {0,0,0,0},
+        {1,0,0,0},
+        {1,1,0,0},
+        {1,0,0,0}
+    }, l1[4][4] = {
+        {0,0,0,0},
+        {1,0,0,0},
+        {1,0,0,0},
+        {1,1,0,0}
+    }, l2[4][4] = {
+        {0,0,0,0},
+        {0,0,0,0},
+        {1,1,1,0},
+        {1,0,0,0}
+    }, l3[4][4] = {
+        {0,0,0,0},
+        {1,1,0,0},
+        {0,1,0,0},
+        {0,1,0,0}
+    }, l4[4][4] = {
+        {0,0,0,0},
+        {0,0,0,0},
+        {0,0,1,0},
+        {1,1,1,0}
+    }, j1[4][4] = {
+        {0,0,0,0},
+        {0,1,0,0},
+        {0,1,0,0},
+        {1,1,0,0}
+    }, j2[4][4] = {
+        {0,0,0,0},
+        {0,0,0,0},
+        {1,0,0,0},
+        {1,1,1,0}
+    }, j3[4][4] = {
+        {0,0,0,0},
+        {1,1,0,0},
+        {1,0,0,0},
+        {1,0,0,0}
+    }, j4[4][4] = {
+        {0,0,0,0},
+        {0,0,0,0},
+        {1,1,1,0},
+        {0,0,1,0}
+    }, s1[4][4] = {
+        {0,0,0,0},
+        {0,0,0,0},
+        {0,1,1,0},
+        {1,1,0,0}
+    }, s2[4][4] = {
+        {0,0,0,0},
+        {1,0,0,0},
+        {1,1,0,0},
+        {0,1,0,0}
+    }, z1[4][4] = {
+        {0,0,0,0},
+        {0,0,0,0},
+        {1,1,0,0},
+        {0,1,1,0}
+    }, z2[4][4] = {
+        {0,0,0,0},
+        {0,1,0,0},
+        {1,1,0,0},
+        {1,0,0,0}
+    }, i1[4][4] = {
+        {1,0,0,0},
+        {1,0,0,0},
+        {1,0,0,0},
+        {1,0,0,0}
+    }, i2[4][4] = {
+        {0,0,0,0},
+        {0,0,0,0},
+        {0,0,0,0},
+        {1,1,1,1}
+    }, o[4][4] = {
+        {0,0,0,0},
+        {0,0,0,0},
+        {1,1,0,0},
+        {1,1,0,0}
+    };
+    
 public:
+    point* getblocks(string shape) {
 
+    }
 };
 
-class point {
-
-};
+class point
+{int x, y;}a[4], b[4];
 
 void error() {
     cout << "Error!\n";
@@ -56,6 +158,7 @@ int main(int argc, char* argv[]) {
         error();
         return 1;
     }
+    board b(m, n);
     string shape;
     int start_col, move;
     while (true) {
@@ -64,7 +167,7 @@ int main(int argc, char* argv[]) {
             break;
         infile >> start_col;
         infile >> move;
-        board(shape, start_col, move);
+        b.upboard(shape, start_col, move);
     }
 	return 0;
 }
