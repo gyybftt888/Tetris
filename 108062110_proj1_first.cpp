@@ -10,14 +10,14 @@ using namespace std;
 
 void initboard(int, int);
 void erase(int);
-void newblock(string, int, int);
+void newblock(int, int);
 bool isempty();
 void upboard(int);
 
 int cur_board[MAX_HEIGHT][MAX_WIDTH];
 int m, n;
 int type;
-int ax[4], ay[4];
+int x[4], y[4];
 
 int block[20][4][4] = {         //[k][3][0] is reference point
 /**********
@@ -154,11 +154,11 @@ void initboard(int row,int column) {
 }
 
 void erase(int r) {
-    int flag = 1;
+    int full = 1;
     for (int j = 1; j <= n; j++)
         if (cur_board[r][j] == 0)
-            flag = 0;
-    if (flag) {
+            full = 0;
+    if (full) {
         for (int i = 0; i < r - 1; i++)
             for (int j = 1; j <= n; j++)
                 cur_board[r - i][j] = cur_board[r - i - 1][j];
@@ -167,7 +167,7 @@ void erase(int r) {
     }
 }
 
-void newblock(string shape, int start_col, int move) {
+void newblock(int start_col, int move) {
     /******************************************
     layer1 type = 17
     layer2 type = 0, 2, 5, 7, 9, 11, 12, 14, 18
@@ -175,99 +175,57 @@ void newblock(string shape, int start_col, int move) {
     layer4 type = 16
     ******************************************/
     if (type == 17) {
-
-        for (int j = 0; j < 4; j++) {
-            ay[j] = 1, ax[j] = start_col + j;
-        }
+        for (int j = 0; j < 4; j++)
+            y[j] = 1, x[j] = start_col + j;
         upboard(move);
-        for (int i = 0; i < 4; i++) {
-            cur_board[ay[i]][ax[i]] = 1;
-            erase(ay[i]);
-        }
     }
     else if (type == 0 || type == 2 || type == 5 || type == 7 || type == 9 || type == 11 || type == 12 || type == 14 || type == 18) {
-
-        for (int i = 0; i < 2; i++)
-            for (int j = 0; j < 4; j++)
-                if (block[type][3 - i][j]) {
-                    //cur_board[2 - i][start_col + j] = block[type][3 - i][j];
-                    ay[j] = 2 - i, ax[j] = start_col + j;
-            cout << ay[j] << " " << ax[j] << endl;
-                }
+        int idx = 0;
+        for (int i = 2; i < 4; i++)
+            for (int j = 0; j < 3; j++)
+                if (block[type][i][j])
+                    y[idx] = i - 1, x[idx++] = start_col + j;
         upboard(move);
-        for (int i = 0; i < 4; i++) {
-
-            cur_board[ay[i]][ax[i]] = 1;
-           // erase(ay[i]);
-        }
     }
     else if (type == 1 || type == 3 || type == 4 || type == 6 || type == 8 || type == 10 || type == 13 || type == 15) {
-
-        for (int i = 0; i < 3; i++)
-            for (int j = 0; j < 4; j++)
-                if (block[type][3 - i][j]) {
-                    //cur_board[3 - i][start_col + j] = block[type][3 - i][j];
-                    ay[j] = 3 - i, ax[j] = start_col + j;
-           cout << ay[j] << " " << ax[j] << endl;
-                }
+        int idx = 0;
+        for (int i = 1; i < 4; i++)
+            for (int j = 0; j < 2; j++)
+                if (block[type][i][j])
+                    y[idx] = i, x[idx++] = start_col + j;
         upboard(move);
-        for (int i = 0; i < 4; i++) {
- 
-            cur_board[ay[i]][ax[i]] = 1;
-            erase(ay[i]);
-        }
     }
     else if (type == 16) {
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++)
-                if (block[type][3 - i][j]) {
-                    //cur_board[4 - i][start_col + j] = block[type][3 - i][j];
-                    ay[j] = 4 - i, ax[j] = start_col + j;
-                    cout << ay[j] << " " << ax[j] << endl;
-                }
-        }
-        //upboard(move);
-        while (isempty()) {
-            for (int i = 0; i < 4; i++) {
-                ay[i] += 1;
-            }
-        }
-        for (int i = 0; i < 4; i++) {
-            ax[i] += move;
-            cout << ay[i] << " " << ax[i] << endl;
-        }
-        while (isempty()) {
-            for (int i = 0; i < 4; i++)
-                ay[i] += 1;
-        }
-
-        for (int i = 0; i < 4; i++) {
-            if (cur_board[ay[i]][ax[i]] == 0) {
-                cur_board[ay[i]][ax[i]] = 1;
-                erase(ay[i]);
-            }
-        }
+        for (int i = 0; i < 4; i++)
+            y[i] = 1 + i, x[i] = start_col;
+        upboard(move);
     }
 }
 
 bool isempty() {
     for (int i = 0; i < 4; i++)
-        if (cur_board[ay[i] + 1][ax[i]] != 0)return false;
+        if (cur_board[y[i] + 1][x[i]] != 0)return false;
     return true;
 }
 
 void upboard(int move) {
     while (isempty()) {
         for (int i = 0; i < 4; i++) {
-            ay[i] += 1;
+            y[i]++;
         }
     }
     for (int i = 0; i < 4; i++) {
-        ax[i] += move;
+        x[i] += move;
     }
     while (isempty()) {
         for (int i = 0; i < 4; i++)
-            ay[i] += 1;
+            y[i]++;
+    }
+    for (int i = 0; i < 4; i++) {
+        if (cur_board[y[i]][x[i]] == 0) {
+            cur_board[y[i]][x[i]] = 1;
+            erase(y[i]);
+        }
     }
 }
 
@@ -309,7 +267,7 @@ int main(int argc, char* argv[]) {
         //infile >> move;
         cin >> start_col;
         cin >> move;
-        newblock(shape, start_col, move);
+        newblock(start_col, move);
         for (int i = 1; i <= m; i++) {
             for (int j = 1; j < n; j++)
                 cout << cur_board[i][j] << " ";
