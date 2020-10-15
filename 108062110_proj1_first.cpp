@@ -5,7 +5,7 @@
 
 using namespace std;
 
-#define MAX_HEIGHT 20
+#define MAX_HEIGHT 25
 #define MAX_WIDTH 50
 
 void initboard(int, int);
@@ -144,10 +144,10 @@ int block[20][4][4] = {         //[k][3][0] is reference point
     {1,1,0,0}
 } };
 
-void initboard(int row,int column) {
+void initboard(int row, int column) {
     for (int i = 0; i < MAX_HEIGHT; i++)
         for (int j = 0; j < MAX_WIDTH; j++) {
-            if (i > 0 && i <= row && j > 0 && j <= column)
+            if (i > 0 && i <= row + 4 && j > 0 && j <= column)
                 cur_board[i][j] = 0;	    	//0 = empty
             else cur_board[i][j] = -1;	    	//-1 = wall
         }
@@ -273,8 +273,8 @@ int main(int argc, char* argv[]) {
     outfile.open("108062110_proj1.final", ios::out);
     for (int i = 1; i <= m; i++) {
         for (int j = 1; j < n; j++)
-            outfile << cur_board[i][j] << " ";
-        outfile << cur_board[i][n] << endl;
+            outfile << cur_board[i + 4][j] << " ";
+        outfile << cur_board[i + 4][n] << endl;
     }
     infile.close();
     outfile.close();
