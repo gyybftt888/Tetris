@@ -5,8 +5,8 @@
 
 using namespace std;
 
-#define MAX_HEIGHT 16
-#define MAX_WIDTH 41
+#define MAX_HEIGHT 20
+#define MAX_WIDTH 50
 
 void initboard(int, int);
 void erase(int);
@@ -230,19 +230,20 @@ void upboard(int move) {
 }
 
 int main(int argc, char* argv[]) {
-    /*ifstream infile(argv[1]);               //開啟檔案
+    ifstream infile(argv[1]);               //開啟檔案
     if (!infile) {                          //判斷是否正確開啟檔案
         cout << "Can not open file!\n";
         return 1;
-    }*/
-    //infile >> m >> n;
-    cin >> m >> n;
+    }
+    ofstream outfile;
+    infile >> m >> n;
+    //cin >> m >> n;
     initboard(m, n);
     string shape;
     int start_col, move;
     while (true) {
-        //infile >> shape;
-        cin >> shape;
+        infile >> shape;
+        //cin >> shape;
         if (shape == "End") break;
         else if (shape == "T1") type = 0;
         else if (shape == "T2") type = 1;
@@ -263,17 +264,19 @@ int main(int argc, char* argv[]) {
         else if (shape == "I1") type = 16;
         else if (shape == "I2") type = 17;
         else if (shape == "O") type = 18;
-        //infile >> start_col;
-        //infile >> move;
-        cin >> start_col;
-        cin >> move;
+        infile >> start_col;
+        infile >> move;
+        //cin >> start_col;
+        //cin >> move;
         newblock(start_col, move);
-        for (int i = 1; i <= m; i++) {
-            for (int j = 1; j < n; j++)
-                cout << cur_board[i][j] << " ";
-            cout << cur_board[i][n] << endl;
-        }
     }
-
+    outfile.open("108062110_proj1.final", ios::out);
+    for (int i = 1; i <= m; i++) {
+        for (int j = 1; j < n; j++)
+            outfile << cur_board[i][j] << " ";
+        outfile << cur_board[i][n] << endl;
+    }
+    infile.close();
+    outfile.close();
     return 0;
 }
